@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PdfUnlock": {
+      "commandName": "Project",
+      "commandLineArgs": "-f \"C:\\Users\\DSC\\Downloads\\BV00630 - Pay Slip - 202402M01.pdf\" -p 1463"
+    }
+  }
+}
