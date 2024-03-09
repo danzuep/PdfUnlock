@@ -31,16 +31,6 @@ public sealed class Program
         return 0;
     }
 
-    //public record PdfConfig(string File, string Password, string Output, int WaitSeconds = 3);
-
-    //[RequiresUnreferencedCode("Calls Microsoft.Extensions.Configuration.ConfigurationBinder.Get<T>()")]
-    //[RequiresDynamicCode("Calls Microsoft.Extensions.Configuration.ConfigurationBinder.Get<T>()")]
-    //private static T? InitialiseOptions<T>(string[] args) where T : new()
-    //{
-    //    var config = InitialiseConfig(args);
-    //    return config.Get<T>();
-    //}
-
     private static IConfigurationRoot InitialiseConfig(string[] args)
     {
         var switchMappings = new Dictionary<string, string>()

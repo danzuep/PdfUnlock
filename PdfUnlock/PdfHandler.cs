@@ -39,18 +39,6 @@ public class PdfHandler
                         File.WriteAllBytes(filePathOutput, bytes);
                         _logger.LogInformation("PDF contents have been written to '{0}'.", filePathOutput);
                     }
-                    //using var memoryStream = new MemoryStream();
-                    //using var inputStream = File.OpenRead(filePath);
-                    //inputStream.CopyTo(memoryStream);
-                    //if (GetUnlockedStream(memoryStream, out MemoryStream outputStream))
-                    //{
-                    //    _logger.LogDebug("Unlocked '{0}'.", fileName);
-                    //    string filePathOutput = string.IsNullOrEmpty(output) ?
-                    //        GetOutputFileName(fileName, "", " (Unlocked)") : output;
-                    //    using var fileStream = File.Create(filePathOutput);
-                    //    outputStream.WriteTo(fileStream);
-                    //    _logger.LogInformation("PDF contents have been written to '{0}'.", filePathOutput);
-                    //}
                 }
                 catch (Exception ex)
                 {
@@ -61,7 +49,7 @@ public class PdfHandler
                 }
             }
             else
-                _logger.LogWarning("'{0}' is not in a valid PDF MimePart format.", fileName);
+                _logger.LogWarning("'{0}' is not in a valid PDF format.", fileName);
         }
         catch (Exception ex)
         {
@@ -150,7 +138,6 @@ public class PdfHandler
         {
             using var pageReader = GetDocReader(filePathInput, null, imageSize).GetPageReader(0);
             var bytes = PdfImageHandler.PdfToPng(pageReader);
-            //string fileName = Path.GetFileName(filePathInput);
             filePathOutput = GetOutputFileName(filePathInput, "PdfThumbnails")
                 .Replace(".pdf", ".png", StringComparison.OrdinalIgnoreCase);
             File.WriteAllBytes(filePathOutput, bytes);
@@ -158,15 +145,29 @@ public class PdfHandler
         return filePathOutput;
     }
 
+    /// <summary>
+    /// Truncated hexadecimal string with up to 16^32 combinations.
+    /// </summary>
+    /// <param name="count">Base 16 exponent.</param>
+    /// <returns>Truncated hexadecimal string</returns>
+    internal static string GetHexId(int count = 32)
+    {
+        if (count < 1)
+            count = 1;
+        if (count > 32)
+            count = 32;
+        var uuid = Guid.NewGuid().ToString("n", null)[..count];
+        return uuid;
+    }
+
     private const int MaxFilePathLength = 260;
 
-    private string GetOutputFileName(string? filePath, string subFolder = "Temp", string suffix = "", bool create = true) //" (Copy)"
+    private string GetOutputFileName(string? filePath, string subFolder = "Temp", string suffix = "", bool create = true)
     {
         if (string.IsNullOrEmpty(filePath))
             return string.Empty;
         var outputPath = filePath;
         var folder = Path.GetDirectoryName(filePath);
-        //var fileName = Path.GetFileName(filePath);
         if (folder != null && (File.Exists(outputPath) || !string.IsNullOrEmpty(suffix)))
         {
             string name = Path.GetFileNameWithoutExtension(filePath);
@@ -181,9 +182,7 @@ public class PdfHandler
             if (File.Exists(outputPath))
                 outputPath = Path.Combine(folder, $"{name}_{DateTime.Now.Ticks}{extension}");
             if (outputPath.Length > MaxFilePathLength)
-                outputPath = Path.Combine(folder, $"{DateTime.Now.Ticks}{extension}");
-            if (outputPath.Length > MaxFilePathLength)
-                outputPath = Path.Combine(folder, $"{DateTime.Now.Millisecond}{extension}");
+                outputPath = Path.Combine(folder, $"{GetHexId(name.Length)}{extension}");
         }
         return outputPath;
     }
@@ -205,8 +204,6 @@ public class PdfHandler
     {
         try
         {
-            //var security = new DirectorySecurity("ReadFolder", AccessControlSections.Access);
-            // If the directory already exists, this method does not create a new directory.
             Directory.CreateDirectory(uncPath);
         }
         catch (UnauthorizedAccessException ex)
@@ -303,7 +300,6 @@ public class PdfHandler
             foreach (var text in pages)
             {
                 allText.Append(text);
-                //allText.AppendJoin(", ", text);
                 _logger.LogDebug(text);
             }
 

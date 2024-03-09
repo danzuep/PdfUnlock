@@ -17,12 +17,6 @@ public static class PdfDocumentHandler
         var security = document.SecuritySettings;
         bool isSecured = security.DocumentSecurityLevel != PdfDocumentSecurityLevel.None;
         bool hasPermission = security.PermitPrint &&
-            //security.PermitModifyDocument &&
-            //security.PermitFullQualityPrint &&
-            //security.PermitAnnotations &&
-            //security.PermitFormsFill &&
-            //security.PermitAccessibilityExtractContent &&
-            //security.PermitAssembleDocument &&
             security.PermitExtractContent;
         return isSecured || !hasPermission;
     }

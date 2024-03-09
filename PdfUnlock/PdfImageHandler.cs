@@ -25,7 +25,7 @@ public static class PdfImageHandler
                 Width = 1024,
                 Height = 1024
             };
-            var bytes = DocLib.Instance.JpegToPdf(new[] { file });
+            var bytes = DocLib.Instance.JpegToPdf([file]);
             File.WriteAllBytes(filePathOutput, bytes);
         }
     }
@@ -61,27 +61,6 @@ public static class PdfImageHandler
 
         return result;
     }
-
-    //public static MemoryStream GetPageReaderImageStream(this MemoryStream inputStream, string password = null)
-    //{
-    //    MemoryStream outputStream = new MemoryStream();
-    //    if (inputStream != null)
-    //    {
-    //        inputStream.Position = 0;
-    //        using var docReader = DocLib.Instance.GetDocReader(
-    //            inputStream.ToArray(), password, new PageDimensions());
-    //        int byteOffset = 0;
-    //        for (int page = 0; page < docReader.GetPageCount(); page++)
-    //        {
-    //            var pageReader = docReader.GetPageReader(page);
-    //            var bytes = pageReader.GetImage();
-    //            outputStream.Write(bytes, byteOffset, bytes.Length);
-    //            byteOffset += bytes.Length;
-    //        }
-    //        outputStream.Position = 0;
-    //    }
-    //    return outputStream;
-    //}
 
     [SupportedOSPlatform("windows")]
     public static void ConvertPageToSimpleImageWithLetterOutlines(
