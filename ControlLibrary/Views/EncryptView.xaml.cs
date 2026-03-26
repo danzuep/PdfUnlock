@@ -1,0 +1,15 @@
+﻿using System.Windows.Controls;
+
+namespace ControlLibrary.Views
+{
+    /// <summary>
+    /// Interaction logic for EncryptView.xaml
+    /// </summary>
+    public partial class EncryptView : UserControl
+    {
+        public EncryptView()
+        {
+            InitializeComponent();
+        }
+    }
+}
