@@ -21,7 +21,11 @@ public class PdfHandler
 
     public void GetUnlockedPdf(string? filePath, string? password, string? output = null)
     {
-        _logger.LogDebug("FilePath: {0}; HasPassword: {1}; Output: {2}", filePath, !string.IsNullOrEmpty(password), output);
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("File path is required.", nameof(filePath));
+
+        _logger.LogDebug("Starting PDF unlock for {File}; HasPassword: {HasPassword}; Output: {OutputPath}",
+            filePath, !string.IsNullOrEmpty(password), output);
 
         var fileName = Path.GetFileName(filePath);
         try
